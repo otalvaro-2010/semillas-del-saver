@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#246b3b">
+<title>Semillas del Saber App</title>
+
+<style>
+:root {
+  --verde: #246b3b;
+  --verde-claro: #eaf5e5;
+  --fondo: #f4f8f0;
+  --texto: #23452d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--texto);
+  background: var(--fondo);
+}
+header {
+  background: linear-gradient(135deg, #1e6334, #48a35b);
+  color: white;
+  text-align: center;
+  padding: 28px 18px;
+}
+.logo { font-size: 48px; }
+header h1 { font-size: 27px; margin: 8px 0; }
+header p { margin: 0; }
+main {
+  width: 100%;
+  max-width: 650px;
+  padding: 16px;
+  margin: auto;
+}
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin: 16px 0;
+  box-shadow: 0 3px 12px #203b2010;
+}
+h2 { font-size: 23px; }
+h3 { margin-top: 0; }
+label {
+  display: block;
+  font-weight: bold;
+  margin: 14px 0 6px;
+}
+input, textarea, select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #c7d9c3;
+  border-radius: 9px;
+  background: white;
+  font-size: 16px;
+  color: var(--texto);
+}
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.principal {
+  width: 100%;
+  margin-top: 18px;
+  color: white;
+  background: var(--verde);
+}
+.secundario {
+  color: var(--verde);
+  background: var(--verde-claro);
+  margin-top: 10px;
+}
+.registro {
+  border-top: 1px solid #e0e9dc;
+  padding: 14px 0;
+  overflow-wrap: anywhere;
+}
+.registro p { line-height: 1.5; }
+.etiqueta {
+  color: #517458;
+  font-size: 13px;
+}
+#mensaje, #mensajeGrafica {
+  font-weight: bold;
+  color: var(--verde);
+  overflow-wrap: anywhere;
+}
+footer {
+  text-align: center;
+  padding: 18px;
+  font-size: 12px;
+  color: #617665;
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">🌱</div>
+  <h1>Semillas del Saber App</h1>
+  <p>Cultivamos conocimiento, cosechamos futuro.</p>
+</header>
+
+<main>
+  <h2>Mi huerta escolar 🌻</h2>
+  <p>Registra los cuidados de tus plantas y aprende con datos reales.</p>
+
+  <section class="card">
+    <h3>📝 Registrar una observación</h3>
+
+    <form id="formulario">
+      <div class="campo">
+        <label for="nombreEstudiante">Nombre del estudiante</label>
+        <input
+          type="text"
+          id="nombreEstudiante"
+          placeholder="Escribe tu nombre completo"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="cursoEstudiante">Curso</label>
+        <input
+          type="text"
+          id="cursoEstudiante"
+          placeholder="Ej. 11-2"
+          required
+        >
+      </div>
+
+      <label for="fecha">Fecha de observación</label>
+      <input id="fecha" type="date" required>
+
+      <label for="planta">Nombre de la planta</label>
+      <input
+        id="planta"
+        type="text"
+        placeholder="Ej. tomate o cilantro"
+        required
+      >
+
+      <label for="altura">Altura de la planta (cm)</label>
+      <input
+        id="altura"
+        type="number"
+        min="0"
+        step="0.1"
+        placeholder="Ej. 12.5"
+        required
+      >
+
+      <label for="agua">Agua aplicada (mL)</label>
+      <input
+        id="agua"
+        type="number"
+        min="0"
+        step="0.1"
+        placeholder="Ej. 200"
+        required
+      >
+
+      <label for="temperatura">Temperatura (°C)</label>
+      <input
+        id="temperatura"
+        type="number"
+        min="-50"
+        max="70"
+        step="0.1"
+        placeholder="Ej. 29.5"
+        required
+      >
+
+      <label for="observaciones">Observaciones</label>
+      <textarea
+        id="observaciones"
+        rows="3"
+        placeholder="Estado de las hojas, humedad de la tierra..."
+      ></textarea>
+
+      <button class="principal" type="submit">
+        Guardar registro
+      </button>
+    </form>
+
+    <p id="mensaje" role="status"></p>
+  </section>
+
+  <section class="card">
+    <h3>📋 Historial de la huerta</h3>
+    <p id="resumen">Cargando registros...</p>
+
+    <button class="principal" type="button" id="exportarCSV">
+      📥 Descargar reportes para Excel
+    </button>
+
+    <div id="historial"></div>
+  </section>
+
+  <section class="card">
+    <h3>📊 Resumen de mediciones</h3>
+    <p id="estadisticas">
+      Registra una observación para ver el resumen.
+    </p>
+  </section>
+
+  <section class="card">
+    <h3>📈 Crecimiento de las plantas</h3>
+    <p>
+      Selecciona una planta para comparar su altura
+      en las diferentes fechas registradas.
+    </p>
+
+    <label for="plantaGrafica">Seleccionar planta</label>
+    <select id="plantaGrafica">
+      <option value="">Primero registra una planta</option>
+    </select>
+
+    <div style="width:100%; overflow:hidden; margin-top:18px;">
+      <canvas
+        id="graficaCrecimiento"
+        style="display:block; width:100%; height:280px;"
+        height="280"
+      ></canvas>
+    </div>
+
+    <p id="mensajeGrafica" role="status">
+      Registra mediciones para ver la gráfica.
+    </p>
+  </section>
+</main>
+
+<footer>
+  Proyecto escolar · Día STEAM 2026<br>
+  Semillas del Saber App
+</footer>
+
+<!-- Biblioteca para crear archivos Excel .xlsx -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script>
+"use strict";
+
+// IMPORTANTE: conservar las claves originales.
+const CLAVE = "huertaviva_registros_v1";
+const CLAVE_ESTUDIANTE = "semillas_saber_estudiante";
+
+const formulario = document.getElementById("formulario");
+const historial = document.getElementById("historial");
+const resumen = document.getElementById("resumen");
+const mensaje = document.getElementById("mensaje");
+const estadisticas = document.getElementById("estadisticas");
+
+let registros = [];
+
+function cargarEstudiante() {
+  try {
+    const guardado = localStorage.getItem(CLAVE_ESTUDIANTE);
+
+    if (guardado) {
+      const estudiante = JSON.parse(guardado);
+
+      document.getElementById("nombreEstudiante").value =
+        estudiante.nombre || "";
+
+      document.getElementById("cursoEstudiante").value =
+        estudiante.curso || "";
+    }
+  } catch (error) {
+    console.error("No se pudo cargar el perfil del estudiante.", error);
+  }
+}
+
+function guardarEstudiante() {
+  const estudiante = {
+    nombre: document.getElementById("nombreEstudiante").value.trim(),
+    curso: document.getElementById("cursoEstudiante").value.trim()
+  };
+
+  try {
+    localStorage.setItem(
+      CLAVE_ESTUDIANTE,
+      JSON.stringify(estudiante)
+    );
+  } catch (error) {
+    mensaje.textContent =
+      "No se pudo guardar el perfil del estudiante.";
+  }
+}
+
+document.getElementById("nombreEstudiante").addEventListener(
+  "change", guardarEstudiante
+);
+
+document.getElementById("cursoEstudiante").addEventListener(
+  "change", guardarEstudiante
+);
+
+cargarEstudiante();
+
+// Leer los registros existentes sin borrarlos.
+try {
+  const guardados = localStorage.getItem(CLAVE);
+  registros = guardados ? JSON.parse(guardados) : [];
+
+  if (!Array.isArray(registros)) {
+    registros = [];
+  }
+} catch (error) {
+  mensaje.textContent =
+    "No se pudieron leer los registros guardados. No se han borrado.";
+  registros = [];
+}
+
+function fechaLocal() {
+  const ahora = new Date();
+  const zona = ahora.getTimezoneOffset();
+
+  return new Date(ahora.getTime() - zona * 60000)
+    .toISOString()
+    .slice(0, 10);
+}
+
+document.getElementById("fecha").value = fechaLocal();
+
+function elemento(etiqueta, texto) {
+  const nodo = document.createElement(etiqueta);
+  nodo.textContent = texto;
+  return nodo;
+}
+
+function mostrarRegistros() {
+  historial.replaceChildren();
+
+  if (registros.length === 0) {
+    resumen.textContent = "Todavía no hay registros guardados.";
+    estadisticas.textContent =
+      "Cuando registres plantas, aquí aparecerán los cálculos.";
+    return;
+  }
+
+  resumen.textContent = "Total de registros: " + registros.length;
+
+  [...registros].reverse().forEach(r => {
+    const bloque = document.createElement("article");
+    bloque.className = "registro";
+
+    bloque.appendChild(elemento(
+      "strong",
+      (r.planta || "Sin nombre") + " · " + (r.fecha || "")
+    ));
+
+    bloque.appendChild(elemento(
+      "p",
+      "👤 Estudiante: " + (r.nombreEstudiante || "No registrado")
+    ));
+
+    bloque.appendChild(elemento(
+      "p",
+      "🎓 Curso: " + (r.cursoEstudiante || "No registrado")
+    ));
+
+    bloque.appendChild(elemento(
+      "p",
+      "Altura: " + r.altura + " cm | Agua: " +
+      r.agua + " mL | Temperatura: " +
+      r.temperatura + " °C"
+    ));
+
+    if (r.observaciones) {
+      bloque.appendChild(elemento(
+        "p",
+        "Observaciones: " + r.observaciones
+      ));
+    }
+
+    historial.appendChild(bloque);
+  });
+
+  const totalAgua = registros.reduce(
+    (suma, r) => suma + (Number(r.agua) || 0),
+    0
+  );
+
+  const promedioTemperatura = registros.reduce(
+    (suma, r) => suma + (Number(r.temperatura) || 0),
+    0
+  ) / registros.length;
+
+  estadisticas.replaceChildren();
+
+  estadisticas.appendChild(elemento(
+    "p",
+    "💧 Agua registrada en total: " +
+    totalAgua.toLocaleString("es-CO") + " mL"
+  ));
+
+  estadisticas.appendChild(elemento(
+    "p",
+    "🌡️ Temperatura promedio registrada: " +
+    promedioTemperatura.toFixed(1) + " °C"
+  ));
+
+  estadisticas.appendChild(elemento(
+    "p",
+    "Estos cálculos resumen los registros ingresados; " +
+    "no sustituyen las mediciones reales."
+  ));
+}
+
+formulario.addEventListener("submit", function(evento) {
+  evento.preventDefault();
+
+  guardarEstudiante();
+
+  const registro = {
+    nombreEstudiante:
+      document.getElementById("nombreEstudiante").value.trim(),
+    cursoEstudiante:
+      document.getElementById("cursoEstudiante").value.trim(),
+    fecha: document.getElementById("fecha").value,
+    planta: document.getElementById("planta").value.trim(),
+    altura: document.getElementById("altura").value,
+    agua: document.getElementById("agua").value,
+    temperatura: document.getElementById("temperatura").value,
+    observaciones:
+      document.getElementById("observaciones").value.trim()
+  };
+
+  if (
+    !registro.fecha ||
+    !registro.planta ||
+    registro.altura === "" ||
+    registro.agua === "" ||
+    registro.temperatura === ""
+  ) {
+    mensaje.textContent =
+      "Completa todos los campos obligatorios.";
+    return;
+  }
+
+  registros.push(registro);
+
+  try {
+    localStorage.setItem(CLAVE, JSON.stringify(registros));
+  } catch (error) {
+    registros.pop();
+
+    mensaje.textContent =
+      "No se pudo guardar. Comprueba el almacenamiento del navegador.";
+    return;
+  }
+
+  mostrarRegistros();
+  dibujarGrafica();
+
+  formulario.reset();
+  cargarEstudiante();
+
+  document.getElementById("fecha").value = fechaLocal();
+
+  mensaje.textContent = "¡Registro guardado correctamente!";
+});
+
+// ---------------- GRÁFICA DE CRECIMIENTO ----------------
+
+const selectorGrafica = document.getElementById("plantaGrafica");
+const lienzoGrafica = document.getElementById("graficaCrecimiento");
+const mensajeGrafica = document.getElementById("mensajeGrafica");
+const contextoGrafica = lienzoGrafica.getContext("2d");
+
+function dibujarGrafica() {
+  const plantas = [...new Set(
+    registros.map(r => r.planta).filter(Boolean)
+  )];
+
+  const seleccionAnterior = selectorGrafica.value;
+  selectorGrafica.replaceChildren();
+
+  if (plantas.length === 0) {
+    selectorGrafica.add(
+      new Option("Primero registra una planta", "")
+    );
+
+    mensajeGrafica.textContent =
+      "Todavía no hay mediciones para graficar.";
+
+    contextoGrafica.clearRect(
+      0, 0, lienzoGrafica.width, lienzoGrafica.height
+    );
+
+    return;
+  }
+
+  plantas.forEach(planta => {
+    selectorGrafica.add(new Option(planta, planta));
+  });
+
+  selectorGrafica.value = plantas.includes(seleccionAnterior)
+    ? seleccionAnterior
+    : plantas[0];
+
+  const datos = registros
+    .filter(r =>
+      r.planta === selectorGrafica.value &&
+      r.fecha &&
+      r.altura !== "" &&
+      Number.isFinite(Number(r.altura)) &&
+      Number(r.altura) >= 0
+    )
+    .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+  const ancho = Math.max(
+    300,
+    Math.floor(lienzoGrafica.getBoundingClientRect().width)
+  );
+
+  const alto = 310;
+  const escala = window.devicePixelRatio || 1;
+
+  lienzoGrafica.width = ancho * escala;
+  lienzoGrafica.height = alto * escala;
+  lienzoGrafica.style.height = alto + "px";
+
+  contextoGrafica.setTransform(escala, 0, 0, escala, 0, 0);
+  contextoGrafica.clearRect(0, 0, ancho, alto);
+
+  if (datos.length < 2) {
+    mensajeGrafica.textContent =
+      "Registra esta planta en al menos dos fechas diferentes " +
+      "para comparar su crecimiento.";
+    return;
+  }
+
+  const porFecha = new Map();
+
+  datos.forEach(r => {
+    if (!porFecha.has(r.fecha)) {
+      porFecha.set(r.fecha, []);
+    }
+
+    porFecha.get(r.fecha).push(Number(r.altura));
+  });
+
+  const puntos = [...porFecha.entries()]
+    .map(([fecha, alturas]) => ({
+      fecha,
+      altura: alturas.reduce((s, n) => s + n, 0) / alturas.length
+    }))
+    .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+  if (puntos.length < 2) {
+    mensajeGrafica.textContent =
+      "Necesitas mediciones en dos fechas diferentes para ver el crecimiento.";
+    return;
+  }
+
+  const margen = {
+    arriba: 38,
+    derecha: 20,
+    abajo: 62,
+    izquierda: 58
+  };
+
+  const areaAncho = ancho - margen.izquierda - margen.derecha;
+  const areaAlto = alto - margen.arriba - margen.abajo;
+
+  const maxAltura = Math.max(...puntos.map(p => p.altura), 1);
+  const minAltura = Math.min(...puntos.map(p => p.altura), 0);
+  const rango = maxAltura - minAltura || 1;
+
+  const limiteMin = Math.max(0, minAltura - rango * 0.15);
+  const limiteMax = maxAltura + rango * 0.15;
+  const rangoY = limiteMax - limiteMin || 1;
+
+  const x = i =>
+    margen.izquierda + i * areaAncho / (puntos.length - 1);
+
+  const y = valor =>
+    margen.arriba + (limiteMax - valor) / rangoY * areaAlto;
+
+  contextoGrafica.font = "12px Arial";
+  contextoGrafica.textAlign = "right";
+  contextoGrafica.textBaseline = "middle";
+  contextoGrafica.fillStyle = "#517458";
+  contextoGrafica.strokeStyle = "#e0e9dc";
+  contextoGrafica.lineWidth = 1;
+
+  for (let i = 0; i <= 4; i++) {
+    const valor = limiteMin + rangoY * i / 4;
+    const posicionY = y(valor);
+
+    contextoGrafica.beginPath();
+    contextoGrafica.moveTo(margen.izquierda, posicionY);
+    contextoGrafica.lineTo(ancho - margen.derecha, posicionY);
+    contextoGrafica.stroke();
+
+    contextoGrafica.fillText(
+      valor.toFixed(1) + " cm",
+      margen.izquierda - 8,
+      posicionY
+    );
+  }
+
+  // Línea de crecimiento
+  contextoGrafica.strokeStyle = "#246b3b";
+  contextoGrafica.lineWidth = 3;
+  contextoGrafica.lineJoin = "round";
+  contextoGrafica.lineCap = "round";
+  contextoGrafica.beginPath();
+
+  puntos.forEach((p, i) => {
+    if (i === 0) {
+      contextoGrafica.moveTo(x(i), y(p.altura));
+    } else {
+      contextoGrafica.lineTo(x(i), y(p.altura));
+    }
+  });
+
+  contextoGrafica.stroke();
+
+  // Puntos, alturas y fechas
+  puntos.forEach((p, i) => {
+    const px = x(i);
+    const py = y(p.altura);
+
+    contextoGrafica.beginPath();
+    contextoGrafica.arc(px, py, 5, 0, Math.PI * 2);
+    contextoGrafica.fillStyle = "#ffffff";
+    contextoGrafica.fill();
+
+    contextoGrafica.lineWidth = 3;
+    contextoGrafica.strokeStyle = "#246b3b";
+    contextoGrafica.stroke();
+
+    contextoGrafica.fillStyle = "#23452d";
+    contextoGrafica.font = "bold 12px Arial";
+    contextoGrafica.textAlign = "center";
+    contextoGrafica.textBaseline = "bottom";
+
+    const etiquetaY = py < margen.arriba + 22
+      ? py + 23
+      : py - 9;
+
+    contextoGrafica.fillText(
+      p.altura.toFixed(1) + " cm",
+      px,
+      etiquetaY
+    );
+
+    contextoGrafica.font = "11px Arial";
+    contextoGrafica.textBaseline = "top";
+
+    const partes = p.fecha.split("-");
+    const fechaCorta = partes.length === 3
+      ? partes[2] + "/" + partes[1]
+      : p.fecha;
+
+    contextoGrafica.fillText(
+      fechaCorta,
+      px,
+      alto - margen.abajo + 12
+    );
+  });
+
+  const inicial = puntos[0].altura;
+  const actual = puntos[puntos.length - 1].altura;
+  const diferencia = actual - inicial;
+
+  mensajeGrafica.textContent =
+    "Planta: " + selectorGrafica.value +
+    ". Altura inicial: " + inicial.toFixed(1) + " cm." +
+    " Última altura: " + actual.toFixed(1) + " cm." +
+    " Cambio registrado: " +
+    (diferencia > 0 ? "+" : "") + diferencia.toFixed(1) +
+    " cm. Se muestran promedios cuando hay varias mediciones en una fecha.";
+}
+
+selectorGrafica.addEventListener("change", dibujarGrafica);
+
+// ---------------- EXPORTACIÓN A EXCEL REAL (.XLSX) ----------------
+
+document.getElementById("exportarCSV").addEventListener(
+  "click",
+  async function() {
+    if (registros.length === 0) {
+      mensaje.textContent =
+        "Todavía no hay registros para exportar.";
+      return;
+    }
+
+    if (typeof XLSX === "undefined") {
+      mensaje.textContent =
+        "No se pudo cargar la biblioteca de Excel. " +
+        "Comprueba tu conexión a internet y vuelve a intentarlo.";
+      return;
+    }
+
+    try {
+      // HOJA 1: RESUMEN POR PLANTA
+      const nombresPlantas = [
+        ...new Set(registros.map(r => r.planta || "Sin nombre"))
+      ].sort((a, b) => a.localeCompare(b));
+
+      const datosResumen = [
+        ["SEMILLAS DEL SABER APP"],
+        ["RESUMEN DEL CRECIMIENTO POR PLANTA"],
+        [
+          "Planta",
+          "Total de registros",
+          "Fechas con medición",
+          "Altura inicial (cm)",
+          "Última altura (cm)",
+          "Cambio registrado (cm)"
+        ]
+      ];
+
+      nombresPlantas.forEach(nombre => {
+        const mediciones = registros.filter(
+          r => (r.planta || "Sin nombre") === nombre
+        );
+
+        const porFecha = new Map();
+
+        mediciones.forEach(r => {
+          if (
+            !r.fecha ||
+            r.altura === "" ||
+            !Number.isFinite(Number(r.altura)) ||
+            Number(r.altura) < 0
+          ) {
+            return;
+          }
+
+          if (!porFecha.has(r.fecha)) {
+            porFecha.set(r.fecha, []);
+          }
+
+          porFecha.get(r.fecha).push(Number(r.altura));
+        });
+
+        const puntos = [...porFecha.entries()]
+          .map(([fecha, alturas]) => ({
+            fecha,
+            altura: alturas.reduce((s, n) => s + n, 0) / alturas.length
+          }))
+          .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+        const inicial = puntos.length
+          ? puntos[0].altura
+          : "";
+
+        const ultima = puntos.length
+          ? puntos[puntos.length - 1].altura
+          : "";
+
+        const cambio = puntos.length >= 2
+          ? ultima - inicial
+          : "";
+
+        datosResumen.push([
+          nombre,
+          mediciones.length,
+          puntos.length,
+          inicial === "" ? "" : Number(inicial.toFixed(1)),
+          ultima === "" ? "" : Number(ultima.toFixed(1)),
+          cambio === "" ? "" : Number(cambio.toFixed(1))
+        ]);
+      });
+
+      // HOJA 2: TODOS LOS REGISTROS ORIGINALES
+      const datosRegistros = [
+        ["REGISTROS COMPLETOS DE LA HUERTA"],
+        [
+          "Nombre del estudiante",
+          "Curso",
+          "Fecha",
+          "Planta",
+          "Altura (cm)",
+          "Agua aplicada (mL)",
+          "Temperatura (°C)",
+          "Observaciones"
+        ],
+        ...registros.map(r => [
+          r.nombreEstudiante || "No registrado",
+          r.cursoEstudiante || "No registrado",
+          r.fecha || "",
+          r.planta || "",
+          r.altura === "" || r.altura == null
+            ? ""
+            : Number(r.altura),
+          r.agua === "" || r.agua == null
+            ? ""
+            : Number(r.agua),
+          r.temperatura === "" || r.temperatura == null
+            ? ""
+            : Number(r.temperatura),
+          r.observaciones || ""
+        ])
+      ];
+
+      // Crear un libro Excel con dos hojas
+      const libro = XLSX.utils.book_new();
+
+      const hojaResumen = XLSX.utils.aoa_to_sheet(datosResumen);
+      const hojaRegistros = XLSX.utils.aoa_to_sheet(datosRegistros);
+
+      // Ajustar el ancho de las columnas
+      hojaResumen["!cols"] = [
+        { wch: 22 },
+        { wch: 18 },
+        { wch: 20 },
+        { wch: 21 },
+        { wch: 21 },
+        { wch: 24 }
+      ];
+
+      hojaRegistros["!cols"] = [
+        { wch: 26 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 20 },
+        { wch: 16 },
+        { wch: 22 },
+        { wch: 20 },
+        { wch: 42 }
+      ];
+
+      XLSX.utils.book_append_sheet(
+        libro,
+        hojaResumen,
+        "Resumen por planta"
+      );
+
+      XLSX.utils.book_append_sheet(
+        libro,
+        hojaRegistros,
+        "Registros completos"
+      );
+
+      // Generar un archivo XLSX auténtico
+      const contenido = XLSX.write(libro, {
+        bookType: "xlsx",
+        type: "array"
+      });
+
+      const archivo = new File(
+        [contenido],
+        "reportes_semillas_del_saber.xlsx",
+        {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      );
+
+      // Compartir o guardar el archivo en el iPhone
+      if (
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare({ files: [archivo] })
+      ) {
+        await navigator.share({
+          files: [archivo],
+          title: "Reportes Semillas del Saber",
+          text:
+            "Excel con resumen del crecimiento y registros completos."
+        });
+
+        mensaje.textContent =
+          "Archivo Excel preparado para guardar o compartir.";
+      } else {
+        const url = URL.createObjectURL(archivo);
+        const enlace = document.createElement("a");
+
+        enlace.href = url;
+        enlace.download = archivo.name;
+        enlace.textContent = "Guardar archivo Excel";
+        enlace.style.display = "block";
+        enlace.style.padding = "12px";
+
+        const anterior = document.getElementById("enlaceExcel");
+
+        if (anterior) {
+          if (anterior.dataset.url) {
+            URL.revokeObjectURL(anterior.dataset.url);
+          }
+          anterior.remove();
+        }
+
+        enlace.id = "enlaceExcel";
+        enlace.dataset.url = url;
+
+        document.getElementById("exportarCSV").after(enlace);
+
+        mensaje.textContent =
+          "Pulsa «Guardar archivo Excel» para obtener el reporte.";
+      }
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Error al generar el Excel:", error);
+
+        mensaje.textContent =
+          "No se pudo generar el Excel. Comprueba la conexión " +
+          "e inténtalo de nuevo.";
+      }
+    }
+  }
+);
+
+// Mostrar los datos existentes al iniciar
+mostrarRegistros();
+dibujarGrafica();
+</script>
+
+<footer class="autor-app">
+  <p>Semillas del Saber App</p>
+  <p>Creado por Jose Otalvaro/Maria jose Restrepo</p>
+</footer>
+</body>
+</html>
